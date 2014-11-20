@@ -1,0 +1,171 @@
+﻿<Window x:Class="TimeZoneHelper.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:TimeZoneHelper"
+        Title="MainWindow"
+        SizeToContent="WidthAndHeight"
+        ResizeMode="NoResize"
+        AllowsTransparency="True"
+        WindowStyle="None"
+        Background="{Binding SetColor}"
+        WindowStartupLocation="CenterScreen"
+        Icon="pack://application:,,,/Images/clock-icon.png"
+        ShowInTaskbar="False"
+
+        IsHitTestVisible="True">
+    <Window.Resources>
+        <ResourceDictionary Source="GlobalStyles.xaml" />
+
+
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Button Name="AddNew"
+                Content="+ Add New Clock"
+                Click="AddNew_OnClick" />
+
+        <ItemsControl Name="ClocksControl" Grid.Row="1"
+                      Grid.IsSharedSizeScope="True">
+            <ItemsControl.Template>
+                <ControlTemplate TargetType="ItemsControl">
+                    <ItemsPresenter />
+                </ControlTemplate>
+            </ItemsControl.Template>
+
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel
+                        Background="{StaticResource transBrush}"
+                        Orientation="Vertical"
+                        PreviewMouseLeftButtonDown="ClocksControl_OnPreviewMouseLeftButtonDown" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition
+                                Width="Auto"
+                                SharedSizeGroup="CityNameColumn" />
+                            <ColumnDefinition
+                                Width="Auto"
+                                SharedSizeGroup="TimeColumn" />
+                            <ColumnDefinition
+                                Width="Auto"
+                                SharedSizeGroup="RemoveButtonColumn" />
+                        </Grid.ColumnDefinitions>
+                        <Label Name="ClockLabel" Grid.Column="0"
+                               Content="{Binding LocationName}" />
+                        <TextBlock Grid.Column="1"
+                                   Text="{Binding Time}"
+                                   Style="{StaticResource TextBlockStyle}" />
+                        <Button Grid.Column="2"
+                                Content="X"
+                                Tag="{Binding Content, ElementName=ClockLabel}"
+                                Height="15"
+                                Width="15"
+                                ToolTip="Remove Clock"
+                                PreviewMouseLeftButtonDown="RemoveButtonPreviewLeftMouseButton" />
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        
+
+        <ToggleButton Name="ShowSliders"
+                Grid.Row="2"
+                Content="Change Background Color"
+                Click="ShowSliders_OnClick">
+            <ToggleButton.Visibility>
+                <MultiBinding Converter="{StaticResource BooleanToVisibilityConverter}">
+                    <Binding ElementName="ClocksControl" 
+                             Path="IsMouseOver"/>
+                    <Binding ElementName="ShowSliders"
+                             Path="IsMouseOver"/>
+                    <Binding ElementName="ShowSliders"
+                             Path="IsChecked"/>
+                </MultiBinding>
+            </ToggleButton.Visibility>
+        </ToggleButton>
+
+        <UserControl Name="SlidersUserControl"
+                    Grid.Row="3">
+            <UserControl.Template>
+                <ControlTemplate>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding BackgroundSlidersVisible}" Value="True">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="SlidersPanel"
+                                            Storyboard.TargetProperty="(Grid.Height)"
+                                            From="0" To="225" Duration="0:0:.15" AutoReverse="False"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
+                            <DataTrigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="SlidersPanel"
+                                            Storyboard.TargetProperty="(Grid.Height)"
+                                            From="225" To="0" Duration="0:0:.15" AutoReverse="False"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.ExitActions>
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                    <Grid Name="SlidersPanel" Height="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <DockPanel VerticalAlignment="Center" Margin="10" Grid.Row="0">
+                            <Label DockPanel.Dock="Left" Style="{x:Null}" FontWeight="Bold">A:</Label>
+                            <Slider Minimum="0" Maximum="255" TickFrequency="10" TickPlacement="BottomRight"
+                                Value="{Binding Alpha, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </DockPanel>
+
+                        <DockPanel VerticalAlignment="Center" Margin="10" Grid.Row="1">
+                            <Label DockPanel.Dock="Left" Style="{x:Null}" FontWeight="Bold">R:</Label>
+                            <Slider Minimum="0" Maximum="255" TickFrequency="10" TickPlacement="BottomRight"
+                                Value="{Binding Red, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </DockPanel>
+
+                        <DockPanel VerticalAlignment="Center" Margin="10" Grid.Row="2">
+                            <Label DockPanel.Dock="Left" Style="{x:Null}" FontWeight="Bold">G:</Label>
+                            <Slider Minimum="0" Maximum="255" TickFrequency="10" TickPlacement="BottomRight"
+                                Value="{Binding Green, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </DockPanel>
+
+                        <DockPanel VerticalAlignment="Center" Margin="10" Grid.Row="3">
+                            <Label DockPanel.Dock="Left" Style="{x:Null}" FontWeight="Bold">B:</Label>
+                            <Slider Minimum="0" Maximum="255" TickFrequency="10" TickPlacement="BottomRight"
+                                Value="{Binding Blue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </DockPanel>
+
+                        <DockPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10" Grid.Row="4">
+                            <ToggleButton Content="Epilepsy?" IsChecked="{Binding IsDataRave}" Width="75" Margin="0,0,10,0"/>
+                            <ToggleButton Content="Aplha Cycle" IsChecked="{Binding IsAlphaCycle}" Width="75" Margin="0,0,10,0"/>
+                            <ToggleButton Content="Color Cycle" IsChecked="{Binding IsColorCycle}" Width="75" />
+                        </DockPanel>
+                    </Grid>
+                </ControlTemplate>
+            </UserControl.Template>
+
+        </UserControl>
+    </Grid>
+</Window>
