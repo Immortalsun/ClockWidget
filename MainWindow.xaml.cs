@@ -33,12 +33,16 @@ namespace TimeZoneHelper
         private bool isAlphaCycle;
         private bool isColorCycle;
         private bool backgroundSlidersVisible;
+        private MediaPlayer player;
 
 
         public MainWindow()
         {
             this.DataContext = this;
             Clocks = new ObservableCollection<WorldClock>();
+            player = new MediaPlayer();
+            player.Open(new Uri(@"Music/SANDSTORM (darude).mp3"
+                ,UriKind.Relative));
             serializer = new ClockSerializer();
             Load(serializer.Deserialize());
             InitializeComponent();
@@ -221,7 +225,14 @@ namespace TimeZoneHelper
             {
                 isDataRave = value;
                 if (value)
+                {
                     Task.Factory.StartNew(StartDataRave);
+                    player.Play();
+                }
+                else
+                {
+                    player.Pause();
+                }
             }
         }
 
