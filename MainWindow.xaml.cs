@@ -329,7 +329,7 @@ namespace TimeZoneHelper
             var decrement = false;
             while (IsAlphaCycle)
             {
-                while (increment)
+                while (increment && IsAlphaCycle)
                 {
                     Alpha = (Alpha + 1)%256;
                     Thread.Sleep(100);
@@ -339,7 +339,7 @@ namespace TimeZoneHelper
                         decrement = true;
                     }
                 }
-                while (decrement)
+                while (decrement && IsAlphaCycle)
                 {
                     Alpha -= 1;
                     Thread.Sleep(100);
@@ -354,16 +354,6 @@ namespace TimeZoneHelper
             }
         }
 
-        private void StartColorCycle()
-        {
-            while (IsColorCycle)
-            {
-                Red = (Red + 1) % 256;
-                Blue = (Blue + 1) % 256;
-                Green = (Green + 1) % 256;
-                Thread.Sleep(100);
-            }
-        }
 
         private void CycleRed()
         {
