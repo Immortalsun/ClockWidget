@@ -207,7 +207,9 @@ namespace TimeZoneHelper
                 isColorCycle = value;
                 if (value)
                 {
-                    Task.Factory.StartNew(StartColorCycle);
+                    Task.Factory.StartNew(CycleRed);
+                    Task.Factory.StartNew(CycleGreen);
+                    Task.Factory.StartNew(CycleBlue);
                 }
             }
         }
@@ -323,10 +325,32 @@ namespace TimeZoneHelper
 
         private void StartAlphaCycle()
         {
+            var increment = true;
+            var decrement = false;
             while (IsAlphaCycle)
             {
-                Alpha = (Alpha + 1) % 256;
-                Thread.Sleep(100);
+                while (increment)
+                {
+                    Alpha = (Alpha + 1)%256;
+                    Thread.Sleep(100);
+                    if (Alpha == 255)
+                    {
+                        increment = false;
+                        decrement = true;
+                    }
+                }
+                while (decrement)
+                {
+                    Alpha -= 1;
+                    Thread.Sleep(100);
+                    if (Alpha == 0)
+                    {
+                        decrement = false;
+                        increment = true;
+                    }
+                }
+
+
             }
         }
 
@@ -338,6 +362,93 @@ namespace TimeZoneHelper
                 Blue = (Blue + 1) % 256;
                 Green = (Green + 1) % 256;
                 Thread.Sleep(100);
+            }
+        }
+
+        private void CycleRed()
+        {
+            var increment = true;
+            var decrement = false;
+            while (IsColorCycle)
+            {
+                while (increment && isColorCycle)
+                {
+                    Red = (Red + 1) % 256;
+                    Thread.Sleep(100);
+                    if (Red == 255)
+                    {
+                        increment = false;
+                        decrement = true;
+                    }
+                }
+                while (decrement && IsColorCycle)
+                {
+                    Red -= 1;
+                    Thread.Sleep(100);
+                    if (Red == 0)
+                    {
+                        decrement = false;
+                        increment = true;
+                    }
+                }
+            }
+        }
+
+        private void CycleGreen()
+        {
+            var increment = true;
+            var decrement = false;
+            while (IsColorCycle)
+            {
+                while (increment && IsColorCycle)
+                {
+                    Green = (Green + 1) % 256;
+                    Thread.Sleep(100);
+                    if (Green == 255)
+                    {
+                        increment = false;
+                        decrement = true;
+                    }
+                }
+                while (decrement && IsColorCycle)
+                {
+                    Green -= 1;
+                    Thread.Sleep(100);
+                    if (Green == 0)
+                    {
+                        decrement = false;
+                        increment = true;
+                    }
+                }
+            }
+        }
+
+        private void CycleBlue()
+        {
+            var increment = true;
+            var decrement = false;
+            while (IsColorCycle)
+            {
+                while (increment && IsColorCycle)
+                {
+                    Blue = (Blue + 1) % 256;
+                    Thread.Sleep(100);
+                    if (Blue == 255)
+                    {
+                        increment = false;
+                        decrement = true;
+                    }
+                }
+                while (decrement && IsColorCycle)
+                {
+                    Blue -= 1;
+                    Thread.Sleep(100);
+                    if (Blue == 0)
+                    {
+                        decrement = false;
+                        increment = true;
+                    }
+                }
             }
         }
 
