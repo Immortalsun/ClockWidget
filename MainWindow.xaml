@@ -160,7 +160,8 @@
                         <DockPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10" Grid.Row="4">
                             <ToggleButton Content="Epilepsy?" IsChecked="{Binding IsDataRave}" Width="75" Margin="0,0,10,0"/>
                             <ToggleButton Content="Aplha Cycle" IsChecked="{Binding IsAlphaCycle}" Width="75" Margin="0,0,10,0"/>
-                            <ToggleButton Content="Color Cycle" IsChecked="{Binding IsColorCycle}" Width="75" />
+                            <ToggleButton Content="Color Cycle" IsChecked="{Binding IsColorCycle}" Width="75" Margin="0,0,10,0"/>
+                            <Button Content="Shuffle Song" Click="ShuffleSong_OnClick"  Width="75"></Button>
                         </DockPanel>
                     </Grid>
                 </ControlTemplate>

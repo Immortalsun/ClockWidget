@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -34,6 +35,7 @@ namespace TimeZoneHelper
         private bool isColorCycle;
         private bool backgroundSlidersVisible;
         private MediaPlayer player;
+        List<string> availableSongs = new List<string>();
 
 
         public MainWindow()
@@ -41,10 +43,11 @@ namespace TimeZoneHelper
             this.DataContext = this;
             Clocks = new ObservableCollection<WorldClock>();
             player = new MediaPlayer();
-            player.Open(new Uri(@"Music/SANDSTORM (darude).mp3"
+            player.Open(new Uri(@"Music/What Is Love.mp3"
                 ,UriKind.Relative));
             serializer = new ClockSerializer();
             Load(serializer.Deserialize());
+            LoadSongs();
             InitializeComponent();
             ClocksControl.ItemsSource = Clocks;
             ContextMenu menu = new ContextMenu();
@@ -95,6 +98,20 @@ namespace TimeZoneHelper
             timeUpdateTask = new Task(UpdateClocks);
             if (isStartingUp)
                 Clocks.Add(new WorldClock("Greensboro", TimeZoneInfo.Local.Id));
+        }
+
+        private  void LoadSongs()
+        {
+            String[] filenames = System.IO.Directory.GetFiles(@"Music");
+            
+            for (int i = 0; i < filenames.Count(); i++)
+            {
+                if (filenames[i].EndsWith(".mp3"))
+                {
+                    availableSongs.Add(filenames[i]);
+                }
+            }
+
         }
 
         private void StartClocks()
@@ -453,5 +470,18 @@ namespace TimeZoneHelper
             }
         }
 
+        private void ShuffleSong_OnClick(object sender, RoutedEventArgs e)
+        {
+            Random rng = new Random();
+            int nextSong = rng.Next(0, availableSongs.Count() - 1);
+            var prepUri = @"Music/" + Path.GetFileName(availableSongs[nextSong]);
+            player.Open(new Uri(prepUri
+                , UriKind.Relative));
+
+            if (isDataRave)
+            {
+                player.Play();
+            }
+        }
     }
 }
