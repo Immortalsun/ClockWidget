@@ -2,4 +2,3 @@ obj/
 bin/
 *.suo
 *.user
-ApiKey.cs
