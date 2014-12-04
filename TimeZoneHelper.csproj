@@ -59,8 +59,11 @@
     <Compile Include="AddDialog.xaml.cs">
       <DependentUpon>AddDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ApiKey.cs" />
     <Compile Include="BooleanToVisibilityConverter.cs" />
     <Compile Include="UserPreferences.cs" />
+    <Compile Include="WeatherApiConnect\WeatherRequester.cs" />
+    <Compile Include="WeatherApiConnect\WeatherUpdater.cs" />
     <Compile Include="WorldClock.cs" />
     <Page Include="GlobalStyles.xaml">
       <SubType>Designer</SubType>
