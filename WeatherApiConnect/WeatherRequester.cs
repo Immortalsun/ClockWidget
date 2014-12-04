@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace TimeZoneHelper.WeatherApiConnect
 {
@@ -73,9 +77,43 @@ namespace TimeZoneHelper.WeatherApiConnect
             {
                 foreach (var weatherUpdater in UpdaterList)
                 {
-                    
+                    JToken token =
+                        await GetWeatherUpdateFromWeb(weatherUpdater.QueryString);
                 }
             }
+        }
+
+        public async Task<JToken> GetWeatherUpdateFromWeb(string requestUrl)
+        {
+            JToken token;
+
+            var memoryStream = new MemoryStream();
+
+            var webRequest = (HttpWebRequest) WebRequest.Create(requestUrl);
+            webRequest.Headers.Add("token", ApiKey.Key);
+
+            using (WebResponse response = await webRequest.GetResponseAsync())
+            {
+                using (Stream responseStream = response.GetResponseStream())
+                {
+                    await responseStream.CopyToAsync(memoryStream);
+                }
+            }
+
+            using (memoryStream)
+            {
+                memoryStream.Position = 0;
+
+                var reader = new StreamReader(memoryStream);
+
+                var jsonString = reader.ReadToEnd();
+
+                token = JObject.Parse(jsonString);
+            }
+
+            memoryStream.Close();
+
+            return token;
         }
 
         /// <summary>

@@ -13,7 +13,7 @@ namespace TimeZoneHelper.WeatherApiConnect
         #endregion
 
         #region Properties
-
+        public string QueryString { get; set; }
         #endregion
 
         #region Constructors
