@@ -36,7 +36,7 @@ namespace TimeZoneHelper
         private bool backgroundSlidersVisible;
         private MediaPlayer player;
         List<string> availableSongs = new List<string>();
-
+        private UserPreferences preferences { get; set; }
 
         public MainWindow()
         {
@@ -49,6 +49,7 @@ namespace TimeZoneHelper
             Load(serializer.Deserialize());
             LoadSongs();
             InitializeComponent();
+            LoadPosition();
             ClocksControl.ItemsSource = Clocks;
             ContextMenu menu = new ContextMenu();
             MenuItem close = new MenuItem();
@@ -68,6 +69,19 @@ namespace TimeZoneHelper
             }
         }
 
+        private void LoadPosition()
+        {
+            preferences = new UserPreferences();
+            Left = preferences.WindowLeft;
+            Top = preferences.WindowTop;
+        }
+
+        private void SavePosition()
+        {
+            preferences.WindowTop = Top;
+            preferences.WindowLeft = Left;
+            preferences.Save();
+        }
 
         private void Load(ClockList savedClocks)
         {
@@ -145,12 +159,6 @@ namespace TimeZoneHelper
             Close();
         }
 
-        private void MainWindow_OnPreviewMouseLeftButtonDown(
-            object sender, MouseButtonEventArgs e)
-        {
-            DragMove();
-        }
-
         private void AddNew_OnClick(object sender, RoutedEventArgs e)
         {
             cancelSource.Cancel();
@@ -177,7 +185,6 @@ namespace TimeZoneHelper
             this.DragMove();
         }
 
-
         private void RemoveButtonPreviewLeftMouseButton(
             object sender, MouseButtonEventArgs e)
         {
@@ -195,8 +202,6 @@ namespace TimeZoneHelper
             SetupClocks();
             StartClocks();
         }
-
-
 
         public SolidColorBrush SetColor
         {
@@ -382,7 +387,6 @@ namespace TimeZoneHelper
             }
         }
 
-
         private void CycleRed()
         {
             var increment = true;
@@ -482,6 +486,11 @@ namespace TimeZoneHelper
             {
                 player.Play();
             }
+        }
+
+        private void MainWindow_OnClosing(object sender, CancelEventArgs e)
+        {
+            SavePosition();
         }
     }
 }
