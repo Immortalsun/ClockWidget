@@ -2,7 +2,7 @@ namespace TimeZoneHelper
 {
     public static class ApiKey
     {
-        // http://www.ncdc.noaa.gov/cdo-web/webservices/v2
-        public static string Key { get { return "XLQkvfpMMBYvmwZHPbOUEHFCfZoyDalw"; } }
+        // http://api.wunderground.com/api/
+        public static string Key { get { return "c66bda8136cac6a6"; } }
     }
 }

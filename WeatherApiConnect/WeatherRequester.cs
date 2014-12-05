@@ -16,7 +16,7 @@ namespace TimeZoneHelper.WeatherApiConnect
         #region Fields
 
         public static string WeatherRequestUrl =
-            "http://www.ncdc.noaa.gov/cdo-web/api/v2/locations";
+            "http://api.wunderground.com/api/";
         private readonly object _threadLock = new object();
         private TimeSpan _updateTime;
         private List<WeatherUpdater> UpdaterList;
@@ -39,6 +39,13 @@ namespace TimeZoneHelper.WeatherApiConnect
         #endregion
 
         #region Methods
+
+        public void AddNewUpdater(WeatherUpdater updater)
+        {
+            UpdaterList.Add(updater);
+        }
+
+
         /// <summary>
         /// Asyc start method for 
         /// updating weather
@@ -79,7 +86,12 @@ namespace TimeZoneHelper.WeatherApiConnect
                 {
                     JToken token =
                         await GetWeatherUpdateFromWeb(weatherUpdater.QueryString);
+                    if (token != null)
+                    {
+                        weatherUpdater.ParseWeatherJson(token);
+                    }
                 }
+                UpdateSuccessful = true;
             }
         }
 
@@ -90,15 +102,15 @@ namespace TimeZoneHelper.WeatherApiConnect
             var memoryStream = new MemoryStream();
 
             var webRequest = (HttpWebRequest) WebRequest.Create(requestUrl);
-            webRequest.Headers.Add("token", ApiKey.Key);
 
-            using (WebResponse response = await webRequest.GetResponseAsync())
-            {
+            WebResponse response =  webRequest.GetResponse();
+            
                 using (Stream responseStream = response.GetResponseStream())
                 {
                     await responseStream.CopyToAsync(memoryStream);
                 }
-            }
+            
+
 
             using (memoryStream)
             {
