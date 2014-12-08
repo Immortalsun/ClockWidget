@@ -26,12 +26,14 @@ namespace TimeZoneHelper
             TimeZone = zone;
             Updater = new WeatherUpdater(name);
             Updater.WeatherUpdateEvent += UpdateCurrentTemp;
+            CurrentTemp = "loading...";
         }
 
         public WorldClock()
         {
             LocationName = "";
             TimeZone = "";
+            CurrentTemp = "loading...";
         }
 
         public void Update()
