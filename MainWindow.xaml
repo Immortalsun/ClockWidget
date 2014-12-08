@@ -68,6 +68,9 @@
                                 SharedSizeGroup="TimeColumn" />
                             <ColumnDefinition
                                 Width="Auto"
+                                SharedSizeGroup="TempColumn"/>
+                            <ColumnDefinition
+                                Width="Auto"
                                 SharedSizeGroup="RemoveButtonColumn" />
                         </Grid.ColumnDefinitions>
                         <Label Name="ClockLabel" Grid.Column="0"
@@ -75,7 +78,10 @@
                         <TextBlock Grid.Column="1"
                                    Text="{Binding Time}"
                                    Style="{StaticResource TextBlockStyle}" />
-                        <Button Grid.Column="2"
+                        <TextBlock Grid.Column="2"
+                                   Text="{Binding CurrentTemp}"
+                                   Style="{StaticResource TextBlockStyle}"/>
+                        <Button Grid.Column="3"
                                 Content="X"
                                 Tag="{Binding Content, ElementName=ClockLabel}"
                                 Height="15"

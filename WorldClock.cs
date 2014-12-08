@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
+using TimeZoneHelper.WeatherApiConnect;
 
 namespace TimeZoneHelper
 {
@@ -12,12 +13,19 @@ namespace TimeZoneHelper
         [XmlIgnore]
         public string Time { get; set; }
 
+        [XmlIgnore]
+        public string CurrentTemp { get; set; }
+
+        [XmlIgnore]
+        public WeatherUpdater Updater { get; set; }
+
 
         public WorldClock(string name, string zone)
         {
             LocationName = name;
             TimeZone = zone;
-
+            Updater = new WeatherUpdater(name);
+            Updater.WeatherUpdateEvent += UpdateCurrentTemp;
         }
 
         public WorldClock()
@@ -33,6 +41,18 @@ namespace TimeZoneHelper
                 TimeZoneInfo.FindSystemTimeZoneById(TimeZone));
             Time = time.ToShortTimeString();
             OnPropertyChanged("Time");
+        }
+
+        public void UpdateCurrentTemp(WeatherEventArgs args)
+        {
+            CurrentTemp = args.NewTemp;
+            OnPropertyChanged("CurrentTemp");
+        }
+
+        public void ResetUpdater()
+        {
+            Updater = new WeatherUpdater(LocationName);
+            Updater.WeatherUpdateEvent += UpdateCurrentTemp;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

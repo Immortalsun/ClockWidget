@@ -11,6 +11,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using TimeZoneHelper.WeatherApiConnect;
 
 namespace TimeZoneHelper
 {
@@ -20,6 +21,7 @@ namespace TimeZoneHelper
     public partial class MainWindow : INotifyPropertyChanged
     {
         private Task timeUpdateTask;
+        private Thread updateWeatherThread;
         private CancellationTokenSource cancelSource;
         public ObservableCollection<WorldClock> Clocks { get; set; }
         private bool isStartingUp = true;
@@ -37,6 +39,7 @@ namespace TimeZoneHelper
         private MediaPlayer player;
         List<string> availableSongs = new List<string>();
         private UserPreferences preferences { get; set; }
+        private WeatherRequester _requester = new WeatherRequester();
 
         public MainWindow()
         {
@@ -90,6 +93,8 @@ namespace TimeZoneHelper
                 foreach (var savedClock in savedClocks.Clocks)
                 {
                     Clocks.Add(savedClock);
+                    savedClock.ResetUpdater();
+                    _requester.AddNewUpdater(savedClock.Updater);
                 }
 
                 if (Clocks.Any())
@@ -131,6 +136,9 @@ namespace TimeZoneHelper
         private void StartClocks()
         {
             timeUpdateTask.Start();
+            updateWeatherThread = new Thread(_requester.Start);
+            updateWeatherThread.IsBackground = true;
+            updateWeatherThread.Start();
         }
 
         private void UpdateClocks()
@@ -153,6 +161,7 @@ namespace TimeZoneHelper
         private void CloseButton_OnClick(object sender, RoutedEventArgs e)
         {
             cancelSource.Cancel();
+            _requester.Stop();
             serializer.SetClocks(Clocks);
             serializer.SetColors(Alpha, Red, Green, Blue);
             serializer.Serialize();
@@ -162,6 +171,7 @@ namespace TimeZoneHelper
         private void AddNew_OnClick(object sender, RoutedEventArgs e)
         {
             cancelSource.Cancel();
+            _requester.Stop();
             isStartingUp = false;
             var addWindow = new AddDialog();
             addWindow.Owner = this;
@@ -189,6 +199,7 @@ namespace TimeZoneHelper
             object sender, MouseButtonEventArgs e)
         {
             cancelSource.Cancel();
+            _requester.Stop();
             var button = sender as Button;
             var clockName = button.Tag.ToString();
 

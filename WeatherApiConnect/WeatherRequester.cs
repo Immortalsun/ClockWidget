@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -16,7 +17,7 @@ namespace TimeZoneHelper.WeatherApiConnect
         #region Fields
 
         public static string WeatherRequestUrl =
-            "http://api.wunderground.com/api/";
+            "http://api.worldweatheronline.com/free/v2/weather.ashx?";
         private readonly object _threadLock = new object();
         private TimeSpan _updateTime;
         private List<WeatherUpdater> UpdaterList;
@@ -58,6 +59,7 @@ namespace TimeZoneHelper.WeatherApiConnect
                 await UpdateWeather();
                 if (UpdateSuccessful)
                 {
+                    FireUpdaters();
                     lock (_threadLock)
                     {
                         Monitor.Wait(_threadLock, _updateTime);
@@ -84,26 +86,26 @@ namespace TimeZoneHelper.WeatherApiConnect
             {
                 foreach (var weatherUpdater in UpdaterList)
                 {
-                    JToken token =
+                    string json =
                         await GetWeatherUpdateFromWeb(weatherUpdater.QueryString);
-                    if (token != null)
+                    if (!String.IsNullOrEmpty(json))
                     {
-                        weatherUpdater.ParseWeatherJson(token);
+                        weatherUpdater.UpdateJson = json;
                     }
                 }
                 UpdateSuccessful = true;
             }
         }
 
-        public async Task<JToken> GetWeatherUpdateFromWeb(string requestUrl)
+        public async Task<String> GetWeatherUpdateFromWeb(string requestUrl)
         {
-            JToken token;
+            string json;
 
             var memoryStream = new MemoryStream();
 
             var webRequest = (HttpWebRequest) WebRequest.Create(requestUrl);
 
-            WebResponse response =  webRequest.GetResponse();
+            WebResponse response = webRequest.GetResponse();
             
                 using (Stream responseStream = response.GetResponseStream())
                 {
@@ -118,14 +120,23 @@ namespace TimeZoneHelper.WeatherApiConnect
 
                 var reader = new StreamReader(memoryStream);
 
-                var jsonString = reader.ReadToEnd();
+                json = reader.ReadToEnd();
 
-                token = JObject.Parse(jsonString);
             }
+
+            response.Dispose();
 
             memoryStream.Close();
 
-            return token;
+            return json;
+        }
+
+        private void FireUpdaters()
+        {
+            foreach (var weatherUpdater in UpdaterList)
+            {
+                weatherUpdater.ParseWeatherJson();
+            }
         }
 
         /// <summary>
