@@ -184,6 +184,7 @@ namespace TimeZoneHelper
                 var clock = new WorldClock(cityName, timeZoneString);
                 clock.Update();
                 Clocks.Add(clock);
+                _requester.AddNewUpdater(clock.Updater);
             }
             SetupClocks();
             StartClocks();
