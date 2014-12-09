@@ -92,11 +92,14 @@
 
                             <TextBlock 
                                 Grid.Column="0"
+                                FontSize="16"
                                 Text="{Binding CityName}"/>
                             <TextBlock
                                 Grid.Column="1"
+                                FontSize="16"
                                 Text="{Binding Country}"/>
                             <TextBlock
+                                FontSize="16"
                                 Margin="5,0,0,0"
                                 Grid.Column="2"
                                 Text="{Binding UTCString}"/>
