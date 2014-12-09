@@ -18,6 +18,8 @@ namespace TimeZoneHelper.WeatherApiConnect
 
         public static string WeatherRequestUrl =
             "http://api.worldweatheronline.com/free/v2/weather.ashx?";
+        public static string WeatherSearchURL =
+            "http://api.worldweatheronline.com/free/v2/search.ashx?";
         private readonly object _threadLock = new object();
         private TimeSpan _updateTime;
         private List<WeatherUpdater> UpdaterList;
@@ -87,7 +89,7 @@ namespace TimeZoneHelper.WeatherApiConnect
                 foreach (var weatherUpdater in UpdaterList)
                 {
                     string json =
-                        await GetWeatherUpdateFromWeb(weatherUpdater.QueryString);
+                        await RequestJsonFromWeb(weatherUpdater.QueryString);
                     if (!String.IsNullOrEmpty(json))
                     {
                         weatherUpdater.UpdateJson = json;
@@ -97,7 +99,7 @@ namespace TimeZoneHelper.WeatherApiConnect
             }
         }
 
-        public async Task<String> GetWeatherUpdateFromWeb(string requestUrl)
+        public static async Task<String> RequestJsonFromWeb(string requestUrl)
         {
             string json;
 
@@ -130,6 +132,7 @@ namespace TimeZoneHelper.WeatherApiConnect
 
             return json;
         }
+
 
         private void FireUpdaters()
         {

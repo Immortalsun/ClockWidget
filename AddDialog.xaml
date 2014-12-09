@@ -6,39 +6,104 @@
         ShowInTaskbar="False"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
-        Title="Window1" Height="70" Width="400">
+        SizeToContent="Height"
+        Title="Window1" Height="Auto" Width="400">
 
     <Window.Resources>
         <ResourceDictionary Source="GlobalStyles.xaml"/>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
+
+        <Label Content="Search a City"
+               Foreground="LightGreen"
+               Grid.Row="0"/>
 
         <TextBox 
             Name="NameBox" 
             Grid.Column="0" 
-            Grid.Row="0" 
-            Width="150" 
+            Grid.Row="1" 
+            Width="345" 
             Height="25" 
             HorizontalAlignment="Left" 
             VerticalAlignment="Top"/>
-        <ComboBox Grid.Column="1" 
-                  Grid.Row="0" 
-                  Height="25"
-                  Name="TimeZoneComboBox"
-                  VerticalAlignment="Top"  />
+        
+        <Button Grid.Column="0" Grid.Row="1"
+                Name="SearchButton"
+                HorizontalAlignment="Right"
+                Width="55"
+                Content="Search"
+                Click="SearchButton_OnClick"
+                ></Button>
+
+        <ItemsControl Name="TimeZoneResults"
+                      Grid.Row="2"
+                      Grid.IsSharedSizeScope="True">
+            <ItemsControl.Template>
+                <ControlTemplate TargetType="ItemsControl">
+                    <ScrollViewer>
+                        <ItemsPresenter/>
+                    </ScrollViewer>
+                </ControlTemplate>
+            </ItemsControl.Template>
+
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Vertical"
+                                HorizontalAlignment="Stretch"
+                                Background="Green"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border Style="{StaticResource LocationRowBorderStyle}"
+                            Width="{Binding Path=ActualWidth, ElementName=NameBox}"
+                            >
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"
+                                            SharedSizeGroup="CityCol"/>
+                                <ColumnDefinition Width="auto"
+                                                  SharedSizeGroup="CountryCol"/>
+                                <ColumnDefinition Width="auto"
+                                                  SharedSizeGroup="TimeZoneCol"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"
+                                         SharedSizeGroup="ItemRow"/>
+                            </Grid.RowDefinitions>
+                            
+                            <TextBlock 
+                                Grid.Column="0"
+                                Text="{Binding CityName}"/>
+                            <TextBlock
+                                Grid.Column="1"
+                                Text="{Binding Country}"/>
+                            <TextBlock
+                                Grid.Column="2"
+                                Text="{Binding TimeZone.Id}"/>
+
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
 
         <StackPanel 
             Orientation="Horizontal" 
-            Grid.Row="1" 
+            Grid.Row="3" 
             Grid.Column="0" 
             Grid.ColumnSpan="2"
             HorizontalAlignment="Center">

@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Documents;
+using System.Windows.Input;
+using TimeZoneHelper.WeatherApiConnect;
+
 namespace TimeZoneHelper
 {
     /// <summary>
@@ -8,21 +12,17 @@ namespace TimeZoneHelper
     /// </summary>
     public partial class AddDialog : Window
     {
-        ObservableCollection<String> TimeZones
-            = new ObservableCollection<string>();
+        ObservableCollection<Location> TimeZones
+            = new ObservableCollection<Location>();
+        LocationSearcher searcher = new LocationSearcher();
         public string Name { get; private set; }
         public string TimeZoneString { get; private set; }
 
         public AddDialog()
         {
-            var collect = TimeZoneInfo.GetSystemTimeZones();
-            foreach (var timeZoneInfo in collect)
-            {
-                TimeZones.Add(timeZoneInfo.Id);
-            }
+           //set up requesters, etc
             InitializeComponent();
-            TimeZoneComboBox.ItemsSource = TimeZones;
-            TimeZoneComboBox.SelectedItem = TimeZoneComboBox.Items[0];
+            TimeZoneResults.ItemsSource = TimeZones;
         }
 
         private void ButtonBase_OkClick(object sender, RoutedEventArgs e)
@@ -30,7 +30,7 @@ namespace TimeZoneHelper
             if (!String.IsNullOrEmpty(NameBox.Text))
             {
                 Name = NameBox.Text;
-                TimeZoneString = TimeZoneComboBox.SelectedItem as String;
+                TimeZoneString = "";
                 this.DialogResult = true;
             }
             else
@@ -44,6 +44,30 @@ namespace TimeZoneHelper
         {
             this.DialogResult = false;
             Close();
+        }
+
+
+        private async void SearchButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            TimeZones.Clear();
+            NameBox.IsEnabled = false;
+            SearchButton.IsEnabled = false;
+            var cityName = NameBox.Text;
+            searcher.GenerateSearchQuery(cityName);
+
+            var json =
+                await WeatherRequester.RequestJsonFromWeb(searcher.QueryString);
+
+            if (!String.IsNullOrEmpty(json))
+            {
+                var list = searcher.ParseLocationJson(json);
+                foreach (var location in list)
+                {
+                    TimeZones.Add(location);
+                }
+            }
+            NameBox.IsEnabled = true;
+            SearchButton.IsEnabled = true;
         }
     }
 }
