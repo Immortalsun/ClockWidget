@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 using System.Windows.Input;
 using TimeZoneHelper.WeatherApiConnect;
@@ -17,7 +18,7 @@ namespace TimeZoneHelper
         LocationSearcher searcher = new LocationSearcher();
         public string Name { get; private set; }
         public string TimeZoneString { get; private set; }
-
+        private Location SelectedLocation;
         public AddDialog()
         {
            //set up requesters, etc
@@ -29,8 +30,8 @@ namespace TimeZoneHelper
         {
             if (!String.IsNullOrEmpty(NameBox.Text))
             {
-                Name = NameBox.Text;
-                TimeZoneString = "";
+                Name = SelectedLocation.CityName;
+                TimeZoneString = SelectedLocation.TimeZone.Id;
                 this.DialogResult = true;
             }
             else
@@ -68,6 +69,20 @@ namespace TimeZoneHelper
             }
             NameBox.IsEnabled = true;
             SearchButton.IsEnabled = true;
+        }
+
+        private void SelectionButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var location = (sender as ToggleButton).Tag;
+            SelectedLocation = (Location)location;
+
+            foreach (var loc in TimeZones)
+            {
+                if (!loc.Equals(SelectedLocation))
+                {
+                    loc.IsChecked = false;
+                }
+            }
         }
     }
 }

@@ -38,6 +38,7 @@ namespace TimeZoneHelper.WeatherApiConnect
             sb.Append("&q=");
             sb.Append(locationName);
             sb.Append("&timezone=yes");
+            //sb.Append("&popular=yes"); //narrow results to only show popular cities
             sb.Append("&format=json");
 
             QueryString = sb.ToString();
@@ -45,30 +46,40 @@ namespace TimeZoneHelper.WeatherApiConnect
 
         public List<Location> ParseLocationJson(string json)
         {
+
             var locationList = new List<Location>();
-            var results = JsonConvert.DeserializeObject<dynamic>(json);
-            if (results == null)
+            try
+            {
+                var results = JsonConvert.DeserializeObject<dynamic>(json);
+
+                var searchApi = results.search_api;
+                var searchResult = searchApi.result;
+
+                var searchArray = (JArray) searchResult;
+
+                foreach (var element in searchArray)
+                {
+                    var area = element.SelectToken("areaName");
+                    var cityName = area[0].Value<string>("value");
+                    var country =
+                        element.SelectToken("country")[0].Value<string>("value");
+                    if (country.Equals("United States of America"))
+                    {
+                        country =
+                            element.SelectToken("region")[0].Value<string>(
+                                "value");
+                    }
+                    var utc =
+                        element.SelectToken("timezone")[0].Value<string>("offset");
+                    locationList.Add(new Location(cityName, country, utc));
+
+                }
+            }
+            catch (Exception ex)
             {
                 locationList.Add
-                    (new Location("Search returned no results.","Try Again",""));
+                (new Location("Search returned no results.", "Try Again", "0"));
                 return locationList;
-            }
-
-            var searchApi = results.search_api;
-            var searchResult = searchApi.result;
-
-            var searchArray = (JArray) searchResult;
-
-            foreach (var element in searchArray)
-            {
-                var area = element.SelectToken("areaName");
-                var cityName = area[0].Value<string>("value");
-                var country =
-                    element.SelectToken("country")[0].Value<string>("value");
-                var utc =
-                    element.SelectToken("timezone")[0].Value<string>("offset");
-                locationList.Add(new Location(cityName, country, utc));
-
             }
 
             return locationList;

@@ -37,7 +37,7 @@
             Height="25" 
             HorizontalAlignment="Left" 
             VerticalAlignment="Top"/>
-        
+
         <Button Grid.Column="0" Grid.Row="1"
                 Name="SearchButton"
                 HorizontalAlignment="Right"
@@ -51,7 +51,10 @@
                       Grid.IsSharedSizeScope="True">
             <ItemsControl.Template>
                 <ControlTemplate TargetType="ItemsControl">
-                    <ScrollViewer>
+                    <ScrollViewer
+                        CanContentScroll="True"
+                        HorizontalScrollBarVisibility="Disabled"
+                        VerticalScrollBarVisibility="Auto">
                         <ItemsPresenter/>
                     </ScrollViewer>
                 </ControlTemplate>
@@ -67,9 +70,12 @@
 
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Border Style="{StaticResource LocationRowBorderStyle}"
-                            Width="{Binding Path=ActualWidth, ElementName=NameBox}"
-                            >
+                    <ToggleButton
+                        Name="SelectionButton"
+                        Click="SelectionButton_OnClick"
+                        IsChecked="{Binding IsChecked, Mode=TwoWay}"
+                        Tag="{Binding}"
+                        >
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"
@@ -83,7 +89,7 @@
                                 <RowDefinition Height="Auto"
                                          SharedSizeGroup="ItemRow"/>
                             </Grid.RowDefinitions>
-                            
+
                             <TextBlock 
                                 Grid.Column="0"
                                 Text="{Binding CityName}"/>
@@ -91,11 +97,13 @@
                                 Grid.Column="1"
                                 Text="{Binding Country}"/>
                             <TextBlock
+                                Margin="5,0,0,0"
                                 Grid.Column="2"
-                                Text="{Binding TimeZone.Id}"/>
+                                Text="{Binding UTCString}"/>
 
                         </Grid>
-                    </Border>
+                        
+                    </ToggleButton>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
