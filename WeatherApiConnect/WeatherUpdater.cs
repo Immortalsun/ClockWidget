@@ -54,8 +54,9 @@ namespace TimeZoneHelper.WeatherApiConnect
           var conditions = data.current_condition;
           var values = conditions[0];
             var args = new WeatherEventArgs();
-            args.NewTemp = values.temp_F + " °F";
-            if (!String.IsNullOrEmpty(args.NewTemp))
+            args.Fahrenheit = values.temp_F + " °F";
+            args.Celsius = values.temp_C + " °C";
+            if (!String.IsNullOrEmpty(args.Fahrenheit))
             {
                 WeatherUpdateEvent.Invoke(args);
             }
@@ -79,7 +80,8 @@ namespace TimeZoneHelper.WeatherApiConnect
 
     public class WeatherEventArgs
     {
-        public string NewTemp { get; set; }
+        public string Fahrenheit { get; set; }
+        public string Celsius { get; set; }
     }
 
 

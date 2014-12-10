@@ -14,7 +14,10 @@ namespace TimeZoneHelper
         public string Time { get; set; }
 
         [XmlIgnore]
-        public string CurrentTemp { get; set; }
+        public string Fahrenheit { get; set; }
+
+        [XmlIgnore]
+        public string Celsius { get; set; }
 
         [XmlIgnore]
         public WeatherUpdater Updater { get; set; }
@@ -26,14 +29,14 @@ namespace TimeZoneHelper
             TimeZone = zone;
             Updater = new WeatherUpdater(name);
             Updater.WeatherUpdateEvent += UpdateCurrentTemp;
-            CurrentTemp = "loading...";
+            Fahrenheit = "loading...";
         }
 
         public WorldClock()
         {
             LocationName = "";
             TimeZone = "";
-            CurrentTemp = "loading...";
+            Fahrenheit = "loading...";
         }
 
         public void Update()
@@ -47,8 +50,10 @@ namespace TimeZoneHelper
 
         public void UpdateCurrentTemp(WeatherEventArgs args)
         {
-            CurrentTemp = args.NewTemp;
-            OnPropertyChanged("CurrentTemp");
+            Fahrenheit = args.Fahrenheit;
+            Celsius = args.Celsius;
+            OnPropertyChanged("Fahrenheit");
+            OnPropertyChanged("Celsius");
         }
 
         public void ResetUpdater()
