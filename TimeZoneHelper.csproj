@@ -66,6 +66,8 @@
     <Compile Include="ApiKey.cs" />
     <Compile Include="BooleanToVisibilityConverter.cs" />
     <Compile Include="Location.cs" />
+    <Compile Include="MusicApiConnect\MusicRequester.cs" />
+    <Compile Include="MusicUser.cs" />
     <Compile Include="UserPreferences.cs" />
     <Compile Include="WeatherApiConnect\LocationSearcher.cs" />
     <Compile Include="WeatherApiConnect\WeatherRequester.cs" />

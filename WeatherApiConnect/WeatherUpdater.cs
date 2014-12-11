@@ -39,7 +39,7 @@ namespace TimeZoneHelper.WeatherApiConnect
             StringBuilder sb = new StringBuilder();
             sb.Append(WeatherRequester.WeatherRequestUrl);
             sb.Append("key=");
-            sb.Append(ApiKey.Key);
+            sb.Append(ApiKey.WeatherKey);
             sb.Append("&q=");
             sb.Append(name);
             sb.Append("&format=json");

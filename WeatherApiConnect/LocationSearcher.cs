@@ -34,7 +34,7 @@ namespace TimeZoneHelper.WeatherApiConnect
             StringBuilder sb = new StringBuilder();
             sb.Append(WeatherRequester.WeatherSearchURL);
             sb.Append("key=");
-            sb.Append(ApiKey.Key);
+            sb.Append(ApiKey.WeatherKey);
             sb.Append("&q=");
             sb.Append(locationName);
             sb.Append("&timezone=yes");

@@ -118,7 +118,8 @@
             Grid.Column="0" 
             Grid.ColumnSpan="2"
             HorizontalAlignment="Center">
-            <Button 
+            <Button
+                Name="OkButton"
                 Width="40" 
                 Height="25" 
                 Content="OK"

@@ -23,6 +23,7 @@ namespace TimeZoneHelper
         {
            //set up requesters, etc
             InitializeComponent();
+            OkButton.Visibility = Visibility.Collapsed;
             TimeZoneResults.ItemsSource = TimeZones;
         }
 
@@ -83,6 +84,7 @@ namespace TimeZoneHelper
                     loc.IsChecked = false;
                 }
             }
+            OkButton.Visibility = Visibility.Visible;
         }
     }
 }
