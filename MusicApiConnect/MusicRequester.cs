@@ -5,20 +5,23 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using TimeZoneHelper.DataClasses;
 
 namespace TimeZoneHelper.MusicApiConnect
 {
-    public class MusicRequester
+    public static class MusicRequester
     {
         #region Fields
 
-        public static string MusicRequestURL = "http://8tracks.com/mixes/1.json";
+        public static string MusicMixRequestURL = "http://8tracks.com/mixes";
+
+        public static string MusicMixSetRequestUrl =
+            "http://8tracks.com/mix_sets/";
         public static string MusicLoginURL = "https://8tracks.com/sessions.json";
         public static string MusicRegisterURL = "https://8tracks.com/users.json";
         #endregion
 
         #region Properties
-        public bool LoginSuccessful { get; set; }
         #endregion
 
         #region Constructors
@@ -27,6 +30,7 @@ namespace TimeZoneHelper.MusicApiConnect
 
         #region Methods
 
+        #region Static Web Request methods
         public static async Task<String> PostRequestToMusicServer
             (string data, string url, List<Tuple<string,string>> headers = null)
         {
@@ -71,15 +75,50 @@ namespace TimeZoneHelper.MusicApiConnect
             return responsejson;
         }
 
+        public static async Task<String> GetRequestToMusicServer(string url,
+            List<Tuple<string,string>> headers = null)
+        {
+            string json;
 
-        public async Task<string> Login(MusicUser user)
+            var memoryStream = new MemoryStream();
+
+            var webRequest = (HttpWebRequest)WebRequest.Create(url);
+
+            WebResponse response = webRequest.GetResponse();
+
+            using (Stream responseStream = response.GetResponseStream())
+            {
+                await responseStream.CopyToAsync(memoryStream);
+            }
+
+            using (memoryStream)
+            {
+                memoryStream.Position = 0;
+
+                var reader = new StreamReader(memoryStream);
+
+                json = reader.ReadToEnd();
+
+            }
+
+            response.Dispose();
+
+            memoryStream.Close();
+
+            return json;
+        }
+        #endregion
+
+
+        #region User Login and Registration
+        public static async Task<string> Login(MusicUser user)
         {
             var loginString = GenerateLoginRequest(user);
             var json = await PostRequestToMusicServer(loginString, MusicLoginURL);
             return json;
         }
 
-        public async Task<string> Register(MusicUser user)
+        public static async Task<string> Register(MusicUser user)
         {
             var registerString = GenerateRegisterRequest(user);
             var headers = new List<Tuple<string, string>>
@@ -93,7 +132,18 @@ namespace TimeZoneHelper.MusicApiConnect
             return json;
         }
 
-        public string GenerateLoginRequest(MusicUser user)
+        public static async Task<string> SearchMixSets(
+            string searchString,
+            SearchType type)
+        {
+
+            return "";
+        }
+
+        #endregion
+
+        #region Generate Request String Methods
+        public static string GenerateLoginRequest(MusicUser user)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("login=");
@@ -104,7 +154,7 @@ namespace TimeZoneHelper.MusicApiConnect
             return sb.ToString();
         }
 
-        public string GenerateRegisterRequest(MusicUser user)
+        public static string GenerateRegisterRequest(MusicUser user)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("user[login]=");
@@ -117,6 +167,8 @@ namespace TimeZoneHelper.MusicApiConnect
 
             return sb.ToString();
         }
+        #endregion
+
 
         #endregion
 

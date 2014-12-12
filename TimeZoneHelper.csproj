@@ -63,25 +63,27 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AddDialog.xaml.cs">
+    <Compile Include="DataClasses\SearchType.cs" />
+    <Compile Include="UIClasses\AddDialog.xaml.cs">
       <DependentUpon>AddDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ApiKey.cs" />
-    <Compile Include="BooleanToVisibilityConverter.cs" />
-    <Compile Include="Location.cs" />
+    <Compile Include="DataClasses\ApiKey.cs" />
+    <Compile Include="DataClasses\BooleanToVisibilityConverter.cs" />
+    <Compile Include="DataClasses\Location.cs" />
+    <Compile Include="DataClasses\Mix.cs" />
     <Compile Include="MusicApiConnect\MusicPlayer.cs" />
     <Compile Include="MusicApiConnect\MusicRequester.cs" />
-    <Compile Include="MusicUser.cs" />
-    <Compile Include="UserPreferences.cs" />
+    <Compile Include="DataClasses\MusicUser.cs" />
+    <Compile Include="DataClasses\UserPreferences.cs" />
     <Compile Include="WeatherApiConnect\LocationSearcher.cs" />
     <Compile Include="WeatherApiConnect\WeatherRequester.cs" />
     <Compile Include="WeatherApiConnect\WeatherUpdater.cs" />
-    <Compile Include="WorldClock.cs" />
+    <Compile Include="DataClasses\WorldClock.cs" />
     <Page Include="GlobalStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="UIClasses\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -89,12 +91,12 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ClockSerializer.cs" />
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="DataClasses\ClockSerializer.cs" />
+    <Compile Include="UIClasses\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="AddDialog.xaml">
+    <Page Include="UIClasses\AddDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -156,6 +158,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

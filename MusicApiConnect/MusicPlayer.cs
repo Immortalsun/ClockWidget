@@ -7,9 +7,7 @@ namespace TimeZoneHelper.MusicApiConnect
     public class MusicPlayer
     {
         #region Fields
-
         private MediaPlayer _player;
-        private MusicRequester _requester;
         #endregion
 
         #region Properties
@@ -25,7 +23,6 @@ namespace TimeZoneHelper.MusicApiConnect
         public MusicPlayer()
         {
             _player = new MediaPlayer();
-            _requester = new MusicRequester();
         }
 
         #endregion
@@ -36,13 +33,13 @@ namespace TimeZoneHelper.MusicApiConnect
             string emailAddress)
         {
             User = new MusicUser(userName, password, emailAddress);
-            RegisterResultJson = await _requester.Register(User);
+            RegisterResultJson = await MusicRequester.Register(User);
         }
 
         public async void LoginUser(string username, string password)
         {
             User = new MusicUser(username, password);
-            LoginResultJson = await _requester.Login(User);
+            LoginResultJson = await MusicRequester.Login(User);
             GetUserTokenFromLoginJson();
         }
 
@@ -55,12 +52,10 @@ namespace TimeZoneHelper.MusicApiConnect
                 var userData = results.user;
                 var token = userData.user_token;
                 User.UserToken = token;
-                _requester.LoginSuccessful= true;
             }
             catch (Exception ex)
             {
                 var errorMsg = results.errors;
-                _requester.LoginSuccessful = false;
             }
         }
 
@@ -73,12 +68,10 @@ namespace TimeZoneHelper.MusicApiConnect
                 var user = type.user;
                 var token = user.user_token;
                 User.UserToken = token;
-                _requester.LoginSuccessful = true;
             }
             catch (Exception ex)
             {
                 var errorMsg = results.errors;
-                _requester.LoginSuccessful = false;
             }
         }
 
