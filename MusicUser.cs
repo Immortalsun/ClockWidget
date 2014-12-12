@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace TimeZoneHelper
 {
     public class MusicUser
@@ -12,16 +7,19 @@ namespace TimeZoneHelper
         #endregion
 
         #region Properties
-        public string UserName { get; private set; }
-        public string Password { get; private set; }
+        public string UserName { get; set; }
+        public string Password { get;  set; }
+        public string Email { get; set; }
+        public string UserToken { get; set; }
         #endregion
 
         #region Constructors
 
-        public MusicUser(string username, string password)
+        public MusicUser(string username, string password, string emailAddress = null)
         {
             UserName = username;
             Password = password;
+            Email = emailAddress;
         }
 
         #endregion
