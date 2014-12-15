@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Media;
 using Newtonsoft.Json;
 
@@ -15,7 +16,7 @@ namespace TimeZoneHelper.MusicApiConnect
         public string LoginResultJson { get; set; }
         public string RegisterResultJson { get; set; }
         public bool LoginSuccessful { get; set; }
-
+        public string ErrorMessage { get; set; }
         #endregion
 
         #region Constructors
@@ -29,38 +30,52 @@ namespace TimeZoneHelper.MusicApiConnect
 
         #region Methods
 
-        public async void RegisterNewUser(string userName, string password,
+        public async Task<bool> RegisterNewUser(string userName, string password,
             string emailAddress)
         {
             User = new MusicUser(userName, password, emailAddress);
             RegisterResultJson = await MusicRequester.Register(User);
+            return LoginSuccessful;
         }
 
-        public async void LoginUser(string username, string password)
+        public async Task<bool> LoginUser(string username, string password)
         {
             User = new MusicUser(username, password);
             LoginResultJson = await MusicRequester.Login(User);
             GetUserTokenFromLoginJson();
+            return LoginSuccessful;
         }
 
 
         public void GetUserTokenFromLoginJson()
         {
+            if (String.IsNullOrEmpty(RegisterResultJson))
+            {
+                ErrorMessage = "Login error"+"\n"+"Check your username and password";
+                return;
+            }
             var results = JsonConvert.DeserializeObject<dynamic>(LoginResultJson);
             try
             {
                 var userData = results.user;
                 var token = userData.user_token;
                 User.UserToken = token;
+                LoginSuccessful = true;
             }
             catch (Exception ex)
             {
-                var errorMsg = results.errors;
+                ErrorMessage = results.errors;
+                LoginSuccessful = false;
             }
         }
 
         public void GetUserTokenFromRegisterJson()
         {
+            if (String.IsNullOrEmpty(RegisterResultJson))
+            {
+                ErrorMessage = "Registration failed"+"\n"+"Try again in a moment";
+                return;
+            }
             var results = JsonConvert.DeserializeObject<dynamic>(RegisterResultJson);
             try
             {
@@ -68,10 +83,12 @@ namespace TimeZoneHelper.MusicApiConnect
                 var user = type.user;
                 var token = user.user_token;
                 User.UserToken = token;
+                LoginSuccessful = true;
             }
             catch (Exception ex)
             {
-                var errorMsg = results.errors;
+                ErrorMessage = results.errors;
+                LoginSuccessful = false;
             }
         }
 

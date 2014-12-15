@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -60,17 +61,28 @@ namespace TimeZoneHelper.MusicApiConnect
 
             requestStream.Close();
 
-            WebResponse response = await request.GetResponseAsync();
+            var responsejson = "";
+            try
+            {
 
-            requestStream = response.GetResponseStream();
+                WebResponse response = await request.GetResponseAsync();
 
-            StreamReader reader = new StreamReader(requestStream);
+                requestStream = response.GetResponseStream();
 
-            var responsejson = reader.ReadToEnd();
+                StreamReader reader = new StreamReader(requestStream);
 
-            reader.Close();
-            requestStream.Close();
-            response.Close();
+                 responsejson = reader.ReadToEnd();
+
+                reader.Close();
+                requestStream.Close();
+                response.Close();
+            }
+            catch (Exception ex)
+            {
+                Trace.Write(ex);
+            }
+
+
 
             return responsejson;
         }

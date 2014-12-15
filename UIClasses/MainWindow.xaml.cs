@@ -36,6 +36,7 @@ namespace TimeZoneHelper
         private bool isAlphaCycle;
         private bool isColorCycle;
         private bool backgroundSlidersVisible;
+        private bool musicMenuVisible;
         private MediaPlayer player;
         List<string> availableSongs = new List<string>();
         private UserPreferences preferences { get; set; }
@@ -323,7 +324,20 @@ namespace TimeZoneHelper
             set
             {
                 backgroundSlidersVisible = value;
-                OnPropertyChanged("BackgroundSlidersVisible");
+                OnPropertyChanged();
+            }
+        }
+
+        public bool MusicMenuVisible
+        {
+            get
+            {
+                return musicMenuVisible;
+            }
+            set
+            {
+                musicMenuVisible = value;
+                OnPropertyChanged();
             }
         }
 
@@ -503,6 +517,11 @@ namespace TimeZoneHelper
         private void MainWindow_OnClosing(object sender, CancelEventArgs e)
         {
             SavePosition();
+        }
+
+        private void MusicPanelToggle_OnClick(object sender, RoutedEventArgs e)
+        {
+            MusicMenuVisible = !MusicMenuVisible;
         }
     }
 }

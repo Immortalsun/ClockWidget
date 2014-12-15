@@ -63,18 +63,22 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DataClasses\BooleanToVisibilityConverter.cs" />
     <Compile Include="DataClasses\SearchType.cs" />
     <Compile Include="UIClasses\AddDialog.xaml.cs">
       <DependentUpon>AddDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="DataClasses\ApiKey.cs" />
-    <Compile Include="DataClasses\BooleanToVisibilityConverter.cs" />
+    <Compile Include="DataClasses\MultiBooleanToVisibilityConverter.cs" />
     <Compile Include="DataClasses\Location.cs" />
     <Compile Include="DataClasses\Mix.cs" />
     <Compile Include="MusicApiConnect\MusicPlayer.cs" />
     <Compile Include="MusicApiConnect\MusicRequester.cs" />
     <Compile Include="DataClasses\MusicUser.cs" />
     <Compile Include="DataClasses\UserPreferences.cs" />
+    <Compile Include="UIClasses\MusicView.xaml.cs">
+      <DependentUpon>MusicView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WeatherApiConnect\LocationSearcher.cs" />
     <Compile Include="WeatherApiConnect\WeatherRequester.cs" />
     <Compile Include="WeatherApiConnect\WeatherUpdater.cs" />
@@ -97,6 +101,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="UIClasses\AddDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UIClasses\MusicView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
