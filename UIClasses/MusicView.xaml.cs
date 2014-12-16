@@ -96,14 +96,37 @@ namespace TimeZoneHelper.UIClasses
             
         }
 
-        private void RegisterButton_OnClick(object sender, RoutedEventArgs e)
+        private async void RegisterButton_OnClick(object sender, RoutedEventArgs e)
         {
-            RegisterVisible = !RegisterVisible;
+            var success = false;
+            ErrorMessage = "";
+            registerButton.IsEnabled = false;
+            if (!String.IsNullOrEmpty(RegUsernameBox.Text) 
+                && !(String.IsNullOrEmpty(RegPasswordBox.Password))
+                && !(String.IsNullOrEmpty(RegEmailBox.Text)))
+            {
+                success = await _player.RegisterNewUser(RegUsernameBox.Text,
+                    RegPasswordBox.Password, RegEmailBox.Text);
+            }
+            RegisterVisible = !success;
+            if (RegisterVisible)
+            {
+                ErrorMessage = _player.ErrorMessage;
+                registerButton.IsEnabled = true;
+            }
         }
 
         private void MixSetButton_OnClick(object sender, RoutedEventArgs e)
         {
             MixSetVisible = !MixSetVisible;
+            RegisterVisible = false;
+            LoginVisible = false;
+        }
+
+        private void SignUpButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            RegisterVisible = !RegisterVisible;
+            LoginVisible = false;
         }
         #endregion
 
@@ -116,5 +139,7 @@ namespace TimeZoneHelper.UIClasses
             if (handler != null)
                 handler(this, new PropertyChangedEventArgs(propertyName));
         }
+
+
     }
 }

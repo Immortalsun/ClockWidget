@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300"
+             Background="DarkOliveGreen">
     <UserControl.Resources>
         <ResourceDictionary Source="../GlobalStyles.xaml"/>
     </UserControl.Resources>
@@ -28,7 +29,8 @@
             <Label Grid.Row="0" Grid.Column="0"
                    FontSize="16"
                    Content="Username:"
-                   Margin="5,0,5,0"/>
+                   Margin="5,0,5,0"
+                   HorizontalAlignment="Right"/>
             <TextBox Grid.Row="0" Grid.Column="1"
                      Name="UsernameBox"
                      Height="30"
@@ -38,7 +40,8 @@
             <Label Grid.Row="1" Grid.Column="0"
                    FontSize="15"
                    Content="Password:"
-                   Margin="5,0,5,0"/>
+                   Margin="5,0,5,0"
+                   HorizontalAlignment="Right"/>
             <PasswordBox Grid.Row="1" 
                          Grid.Column="1"
                          Name="PasswordBox"
@@ -58,9 +61,9 @@
                         Height="35"
                         Width="50"
                         Margin="10,0"/>
-                <Button Content="Register" 
-                        Name="registerButton" 
-                        Click="RegisterButton_OnClick"
+                <Button Content="Sign Up" 
+                        Name="signUpButton" 
+                        Click="SignUpButton_OnClick"
                         Height="35"
                         Width="50"
                         Margin="5,0"/>
@@ -77,8 +80,77 @@
         <Grid Visibility="{Binding RegisterVisible,
             Converter={StaticResource BooleanToVisibilityConverter}}">
             
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0"
+                   FontSize="16"
+                   Content="Username:"
+                   Margin="5,0,5,0"
+                   HorizontalAlignment="Right"/>
+            <TextBox Grid.Row="0" Grid.Column="1"
+                     Name="RegUsernameBox"
+                     Height="30"
+                     VerticalAlignment="Top"
+                     FontSize="16"/>
+
+            <Label Grid.Row="1" Grid.Column="0"
+                   FontSize="16"
+                   Content="Password:"
+                   Margin="5,0,5,0"
+                   HorizontalAlignment="Right"/>
+            <PasswordBox Grid.Row="1" 
+                         Grid.Column="1"
+                         Name="RegPasswordBox"
+                         Height="30"
+                         VerticalAlignment="Top"
+                         FontSize="16"
+                         />
             
-            
+            <Label Grid.Row="2"
+                   Grid.Column="0"
+                   FontSize="16"
+                   Content="Email:"
+                   Margin="5,0,5,0"
+                   HorizontalAlignment="Right"
+                   />
+            <TextBox Grid.Row="2"
+                     Name="RegEmailBox"
+                     Grid.Column="1"
+                     Height="30"
+                     VerticalAlignment="Top"
+                     FontSize="16"/>
+
+            <StackPanel
+                    Orientation="Vertical"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Grid.Row="3">
+            <Button 
+                    Content="Register"
+                    Name="registerButton"
+                    Height="35"
+                    Width="50"
+                    Margin="0,0,0,5"
+                    Click="RegisterButton_OnClick"></Button>
+                
+                <TextBlock 
+                       HorizontalAlignment="Center"
+                       FontSize="16"
+                       Foreground="Red"
+                       Text="{Binding ErrorMessage}"/>
+            </StackPanel>
+
+
         </Grid>
         
         <Grid Visibility="{Binding MixSetVisible,
