@@ -1,19 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using TimeZoneHelper.DataClasses;
 using TimeZoneHelper.MusicApiConnect;
 
 namespace TimeZoneHelper.UIClasses
@@ -29,8 +20,9 @@ namespace TimeZoneHelper.UIClasses
         private bool _loginVisible = true;
         private bool _registerVisible;
         private bool _mixSetVisible;
-        private MusicPlayer _player;
+        private MusicDataHandler _dataHandler;
         private string _errorMessage;
+        private ObservableCollection<SearchType> _searchOptions; 
         #endregion
 
         #region Properties
@@ -58,13 +50,29 @@ namespace TimeZoneHelper.UIClasses
             get { return _errorMessage; }
             set { _errorMessage = value; OnPropertyChanged(); }
         }
+
+        public ObservableCollection<SearchType> SearchOptions
+        {
+            get
+            {
+                return _searchOptions ??
+                       (_searchOptions = new ObservableCollection<SearchType>
+                       {
+                           new SearchType("Artists", SearchType.SearchOption.Artist),
+                           new SearchType("Tag", SearchType.SearchOption.Tag),
+                           new SearchType("Keyword", SearchType.SearchOption.Keyword),
+                           new SearchType("Similar To Mix", SearchType.SearchOption.SimilarToMix)
+                       });
+            }
+        }
+
         #endregion
 
         #region Constructors
         public MusicView()
         {
             InitializeComponent();
-            _player = new MusicPlayer();
+            _dataHandler = new MusicDataHandler();
             DataContext = this;
         }
         #endregion
@@ -84,13 +92,18 @@ namespace TimeZoneHelper.UIClasses
             {
                     success =
                         await
-                            _player.LoginUser(UsernameBox.Text,
+                            _dataHandler.LoginUser(UsernameBox.Text,
                                 PasswordBox.Password);
             }
-            LoginVisible = !success;
-            if (LoginVisible)
+            if (success)
             {
-                ErrorMessage = _player.ErrorMessage;
+                LoginVisible = false;
+                RegisterVisible = false;
+                MixSetVisible = true;
+            }
+            else
+            {
+                ErrorMessage = _dataHandler.ErrorMessage;
                 loginButton.IsEnabled = true;
             }
             
@@ -105,28 +118,32 @@ namespace TimeZoneHelper.UIClasses
                 && !(String.IsNullOrEmpty(RegPasswordBox.Password))
                 && !(String.IsNullOrEmpty(RegEmailBox.Text)))
             {
-                success = await _player.RegisterNewUser(RegUsernameBox.Text,
+                success = await _dataHandler.RegisterNewUser(RegUsernameBox.Text,
                     RegPasswordBox.Password, RegEmailBox.Text);
             }
-            RegisterVisible = !success;
-            if (RegisterVisible)
+
+            if (success)
             {
-                ErrorMessage = _player.ErrorMessage;
+                MixSetVisible = true;
+                LoginVisible = false;
+                RegisterVisible = false;
+            }
+            else
+            {
+                ErrorMessage = _dataHandler.ErrorMessage;
                 registerButton.IsEnabled = true;
             }
-        }
-
-        private void MixSetButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            MixSetVisible = !MixSetVisible;
-            RegisterVisible = false;
-            LoginVisible = false;
         }
 
         private void SignUpButton_OnClick(object sender, RoutedEventArgs e)
         {
             RegisterVisible = !RegisterVisible;
             LoginVisible = false;
+        }
+
+        private void SearchButton_OnClick(object sender, RoutedEventArgs e)
+        {
+
         }
         #endregion
 
@@ -139,6 +156,7 @@ namespace TimeZoneHelper.UIClasses
             if (handler != null)
                 handler(this, new PropertyChangedEventArgs(propertyName));
         }
+
 
 
     }

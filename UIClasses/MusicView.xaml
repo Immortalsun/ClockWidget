@@ -155,7 +155,50 @@
         
         <Grid Visibility="{Binding MixSetVisible,
             Converter={StaticResource BooleanToVisibilityConverter}}">
-            <Button Content="MixSet" Name="mixSetButton" Click="MixSetButton_OnClick"></Button>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                
+                <Label Grid.Row="0" Grid.Column="0"
+                       Grid.ColumnSpan="2"
+                       HorizontalAlignment="Center"
+                       Content="Search For A Mix"></Label>
+                <Label Grid.Row="1" Grid.Column="0"
+                       Content="Search By:"
+                       FontSize="16"
+                       VerticalAlignment="Center"/>
+                <ComboBox Grid.Row="1" Grid.Column="1"
+                          Style="{StaticResource ComboBoxFlatStyle}"
+                          ItemsSource="{Binding SearchOptions}"
+                          SelectedValue="{Binding SearchOption}"
+                          DisplayMemberPath="DisplayName"
+                          Height="25"
+                          VerticalAlignment="Bottom"
+                          />
+                <TextBox Grid.Row="2" Grid.Column="0"
+                         Grid.ColumnSpan="2"
+                         Name="SearchTextBox"
+                         Height="30"
+                         Text="Enter a Search Term"
+                         FontSize="16"
+                         ></TextBox>
+                <Button Grid.Row="3" Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Name="SearchButton"
+                        Height="30"
+                        VerticalAlignment="Top"
+                        Content="Search"
+                        Click="SearchButton_OnClick"
+                        ></Button>
+                
         </Grid>
     </Grid>
 </UserControl>

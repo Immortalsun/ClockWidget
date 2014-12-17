@@ -72,7 +72,7 @@
     <Compile Include="DataClasses\MultiBooleanToVisibilityConverter.cs" />
     <Compile Include="DataClasses\Location.cs" />
     <Compile Include="DataClasses\Mix.cs" />
-    <Compile Include="MusicApiConnect\MusicPlayer.cs" />
+    <Compile Include="MusicApiConnect\MusicDataHandler.cs" />
     <Compile Include="MusicApiConnect\MusicRequester.cs" />
     <Compile Include="DataClasses\MusicUser.cs" />
     <Compile Include="DataClasses\UserPreferences.cs" />

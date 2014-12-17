@@ -5,10 +5,9 @@ using Newtonsoft.Json;
 
 namespace TimeZoneHelper.MusicApiConnect
 {
-    public class MusicPlayer
+    public class MusicDataHandler
     {
         #region Fields
-        private MediaPlayer _player;
         #endregion
 
         #region Properties
@@ -20,11 +19,6 @@ namespace TimeZoneHelper.MusicApiConnect
         #endregion
 
         #region Constructors
-
-        public MusicPlayer()
-        {
-            _player = new MediaPlayer();
-        }
 
         #endregion
 
@@ -49,7 +43,7 @@ namespace TimeZoneHelper.MusicApiConnect
 
         public void GetUserTokenFromLoginJson()
         {
-            if (String.IsNullOrEmpty(RegisterResultJson))
+            if (String.IsNullOrEmpty(LoginResultJson))
             {
                 ErrorMessage = "Login error"+"\n"+"Check your username and password";
                 return;
