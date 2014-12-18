@@ -14,15 +14,13 @@ namespace TimeZoneHelper.DataClasses
 
         #region Properties
         public string DisplayName { get; set; }
-        public SearchOption Option { get; set; }
         #endregion
 
         #region Constructors
 
-        public SearchType(string name, SearchOption option)
+        public SearchType(string name)
         {
             DisplayName = name;
-            Option = option;
         }
 
         #endregion
@@ -35,12 +33,5 @@ namespace TimeZoneHelper.DataClasses
 
         #endregion
 
-        public enum SearchOption
-        {
-            Artist,
-            Tag,
-            Keyword,
-            SimilarToMix
-        }
     }
 }

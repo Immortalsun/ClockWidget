@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Win32.SafeHandles;
 using TimeZoneHelper.DataClasses;
 
 namespace TimeZoneHelper.MusicApiConnect
@@ -146,10 +147,17 @@ namespace TimeZoneHelper.MusicApiConnect
 
         public static async Task<string> SearchMixSets(
             string searchString,
-            SearchType type)
+            SearchType type,
+            MusicUser user)
         {
+            var searchUrl = GenerateMixSetSearchRequest(searchString, type);
+            var headers = new List<Tuple<string, string>>
+            {
+                new Tuple<string, string>("X-User-Token:", user.UserToken)
+            };
+            var json = await GetRequestToMusicServer(searchUrl, headers);
 
-            return "";
+            return json;
         }
 
         #endregion
@@ -179,6 +187,21 @@ namespace TimeZoneHelper.MusicApiConnect
 
             return sb.ToString();
         }
+
+        public static string GenerateMixSetSearchRequest(
+            string query, SearchType type)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(MusicMixSetRequestUrl);
+            sb.Append(type.DisplayName.ToLower() + ":");
+            sb.Append(query);
+            sb.Append(".json?");
+            sb.Append("include=mixes+pagination");
+            sb.Append("&page=1&per_page=10");
+
+            return sb.ToString();
+        }
+
         #endregion
 
 

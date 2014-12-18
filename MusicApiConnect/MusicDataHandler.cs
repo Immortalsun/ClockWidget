@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using Newtonsoft.Json;
+using TimeZoneHelper.DataClasses;
 
 namespace TimeZoneHelper.MusicApiConnect
 {
@@ -14,7 +17,9 @@ namespace TimeZoneHelper.MusicApiConnect
         public MusicUser User { get; set; }
         public string LoginResultJson { get; set; }
         public string RegisterResultJson { get; set; }
+        public string SearchResultJson { get; set; }
         public bool LoginSuccessful { get; set; }
+        public bool SearchReturnedResults { get; set; }
         public string ErrorMessage { get; set; }
         #endregion
 
@@ -38,6 +43,14 @@ namespace TimeZoneHelper.MusicApiConnect
             LoginResultJson = await MusicRequester.Login(User);
             GetUserTokenFromLoginJson();
             return LoginSuccessful;
+        }
+
+        public async Task<List<Mix>> SearchMixSets(
+            string query, SearchType type)
+        {
+            SearchResultJson = await MusicRequester.SearchMixSets(query, type, User);
+            var results = ParseSearchResults();
+            return results;
         }
 
 
@@ -84,6 +97,29 @@ namespace TimeZoneHelper.MusicApiConnect
                 ErrorMessage = results.errors;
                 LoginSuccessful = false;
             }
+        }
+
+        public List<Mix> ParseSearchResults()
+        {
+            if (string.IsNullOrEmpty(SearchResultJson))
+            {
+                SearchReturnedResults = false;
+                ErrorMessage = "Search returned no results. Try again";
+                return null;
+            }
+            var results = JsonConvert.DeserializeObject<dynamic>(SearchResultJson);
+            try
+            {
+                var mixList = new List<Mix>();
+
+                return mixList;
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = results.errors;
+                SearchReturnedResults = false;
+            }
+
         }
 
 

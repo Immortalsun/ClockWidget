@@ -9,7 +9,11 @@
     <UserControl.Resources>
         <ResourceDictionary Source="../GlobalStyles.xaml"/>
     </UserControl.Resources>
-    <Grid>
+    <Grid Height="300">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
         <Grid Name="LoginView" 
             Visibility="{Binding LoginVisible, 
             Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -176,9 +180,9 @@
                        FontSize="16"
                        VerticalAlignment="Center"/>
                 <ComboBox Grid.Row="1" Grid.Column="1"
+                          Name="SearchTypeBox"
                           Style="{StaticResource ComboBoxFlatStyle}"
                           ItemsSource="{Binding SearchOptions}"
-                          SelectedValue="{Binding SearchOption}"
                           DisplayMemberPath="DisplayName"
                           Height="25"
                           VerticalAlignment="Bottom"
@@ -190,7 +194,7 @@
                          Text="Enter a Search Term"
                          FontSize="16"
                          ></TextBox>
-                <Button Grid.Row="3" Grid.Column="0"
+            <Button Grid.Row="3" Grid.Column="0"
                         Grid.ColumnSpan="2"
                         Name="SearchButton"
                         Height="30"
@@ -198,7 +202,44 @@
                         Content="Search"
                         Click="SearchButton_OnClick"
                         ></Button>
-                
         </Grid>
+        
+        <UserControl Grid.Column="1">
+            <UserControl.Template>
+                <ControlTemplate>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding ResultsVisible}" Value="True">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="ResultsPanel"
+                                            Storyboard.TargetProperty="(Grid.Width)"
+                                            From="0" To="275" Duration="0:0:.15" AutoReverse="False"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
+                            <DataTrigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="ResultsPanel"
+                                            Storyboard.TargetProperty="(Grid.Width)"
+                                            From="275" To="0" Duration="0:0:.15" AutoReverse="False"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.ExitActions>
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                    <Grid Name="ResultsPanel" Width="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                    </Grid>
+                </ControlTemplate>
+            </UserControl.Template>
+        </UserControl>
+        
     </Grid>
 </UserControl>
