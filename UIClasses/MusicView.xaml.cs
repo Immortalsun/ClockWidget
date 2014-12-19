@@ -66,8 +66,8 @@ namespace TimeZoneHelper.UIClasses
                 return _searchOptions ??
                        (_searchOptions = new ObservableCollection<SearchType>
                        {
-                           new SearchType("Artists"),
-                           new SearchType("Tag"),
+                           new SearchType("Artist"),
+                           new SearchType("Tags"),
                            new SearchType("Keyword"),
                            new SearchType("Similar To Mix")
                        });

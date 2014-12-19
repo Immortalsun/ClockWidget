@@ -91,32 +91,47 @@ namespace TimeZoneHelper.MusicApiConnect
         public static async Task<String> GetRequestToMusicServer(string url,
             List<Tuple<string,string>> headers = null)
         {
-            string json;
+            string json=null;
 
             var memoryStream = new MemoryStream();
 
             var webRequest = (HttpWebRequest)WebRequest.Create(url);
 
-            WebResponse response = webRequest.GetResponse();
-
-            using (Stream responseStream = response.GetResponseStream())
+            if (headers != null)
             {
-                await responseStream.CopyToAsync(memoryStream);
+                foreach (var header in headers)
+                {
+                    webRequest.Headers.Add(header.Item1, header.Item2);
+                }
             }
 
-            using (memoryStream)
+            try
             {
-                memoryStream.Position = 0;
+                WebResponse response = await webRequest.GetResponseAsync();
 
-                var reader = new StreamReader(memoryStream);
+                using (Stream responseStream = response.GetResponseStream())
+                {
+                    await responseStream.CopyToAsync(memoryStream);
+                }
 
-                json = reader.ReadToEnd();
+                using (memoryStream)
+                {
+                    memoryStream.Position = 0;
 
+                    var reader = new StreamReader(memoryStream);
+
+                    json = reader.ReadToEnd();
+
+                }
+
+                response.Dispose();
+
+                memoryStream.Close();
             }
-
-            response.Dispose();
-
-            memoryStream.Close();
+            catch (Exception ex)
+            {
+                Trace.Write(ex);
+            }
 
             return json;
         }
@@ -151,11 +166,11 @@ namespace TimeZoneHelper.MusicApiConnect
             MusicUser user)
         {
             var searchUrl = GenerateMixSetSearchRequest(searchString, type);
-            var headers = new List<Tuple<string, string>>
-            {
-                new Tuple<string, string>("X-User-Token:", user.UserToken)
-            };
-            var json = await GetRequestToMusicServer(searchUrl, headers);
+            //var headers = new List<Tuple<string, string>>
+            //{
+            //    new Tuple<string, string>("X-User-Token:".Trim(), user.UserToken)
+            //};
+            var json = await GetRequestToMusicServer(searchUrl);
 
             return json;
         }
@@ -196,7 +211,10 @@ namespace TimeZoneHelper.MusicApiConnect
             sb.Append(type.DisplayName.ToLower() + ":");
             sb.Append(query);
             sb.Append(".json?");
-            sb.Append("include=mixes+pagination");
+            sb.Append("api_key=");
+            sb.Append(ApiKey.MusicKey);
+            sb.Append("&api_version=3");
+            sb.Append("&include=mixes+pagination");
             sb.Append("&page=1&per_page=10");
 
             return sb.ToString();

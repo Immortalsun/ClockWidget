@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using TimeZoneHelper.DataClasses;
 
 namespace TimeZoneHelper.MusicApiConnect
@@ -111,6 +112,18 @@ namespace TimeZoneHelper.MusicApiConnect
             try
             {
                 var mixList = new List<Mix>();
+                var mixSets = results.mix_set;
+                var mixArray = (JArray)mixSets.mixes;
+
+                foreach (var mix in mixArray)
+                {
+                    var id = mix.SelectToken("id").Value<string>();
+                    var name = mix.SelectToken("name").Value<string>();
+                    var desc = mix.SelectToken("description").Value<string>();
+
+                    mixList.Add(new Mix(id, name, desc));
+                }
+
 
                 return mixList;
             }
@@ -119,7 +132,7 @@ namespace TimeZoneHelper.MusicApiConnect
                 ErrorMessage = results.errors;
                 SearchReturnedResults = false;
             }
-
+            return null;
         }
 
 
