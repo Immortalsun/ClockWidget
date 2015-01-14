@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -167,8 +168,18 @@ namespace TimeZoneHelper.UIClasses
                 var resultList =
                     await _dataHandler.SearchMixSets(searchQuery,
                           (SearchType) SearchTypeBox.SelectedItem);
+
+                if (resultList.Any())
+                {
+                    foreach (var mix in resultList)
+                    {
+                        if(!String.IsNullOrEmpty(mix.Name))
+                            MixSet.Add(mix);
+                    }
+                }
+
             }
-            ResultsVisible = !ResultsVisible;
+
         }
         #endregion
 
@@ -186,6 +197,11 @@ namespace TimeZoneHelper.UIClasses
         private void BackToSearchButton_OnClick(object sender, RoutedEventArgs e)
         {
             ResultsVisible = !ResultsVisible;
+        }
+
+        private void SelectMixButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            
         }
     }
 }

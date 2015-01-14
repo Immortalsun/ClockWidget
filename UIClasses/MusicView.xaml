@@ -168,6 +168,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 
@@ -202,44 +203,89 @@
                         Content="Search"
                         Click="SearchButton_OnClick"
                         ></Button>
+
+            <Grid 
+                  Grid.Column="0"
+                  Grid.ColumnSpan="2"
+                  Grid.Row="4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Results"
+                           FontSize="16"
+                           Grid.Row="0"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top"/>
+
+                <ItemsControl Grid.Row="1"
+                                      Grid.IsSharedSizeScope="True"
+                                      Name="MixViewItemsControl"
+                                      ItemsSource="{Binding MixSet}">
+
+                    <ItemsControl.Template>
+                        <ControlTemplate TargetType="ItemsControl">
+                            <ScrollViewer
+                                        CanContentScroll="True"
+                                        HorizontalScrollBarVisibility="Disabled"
+                                        VerticalScrollBarVisibility="Auto">
+                                <ItemsPresenter/>
+                            </ScrollViewer>
+                        </ControlTemplate>
+                    </ItemsControl.Template>
+
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical"
+                                                HorizontalAlignment="Stretch"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button
+                                        Name="SelectMixButton"
+                                        Click="SelectMixButton_OnClick"
+                                        Tag="{Binding}"
+                                        >
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"
+                                                                  SharedSizeGroup="MixNameCol"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"
+                                                               SharedSizeGroup="MixNameRow"/>
+                                        <RowDefinition Height="Auto"
+                                                               SharedSizeGroup="MixDescRow"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock
+                                                Grid.Column="0"
+                                                Grid.Row="0"
+                                                FontSize="16"
+                                                HorizontalAlignment="Center"
+                                                Text="{Binding Name}"
+                                                TextWrapping="Wrap"/>
+
+                                    <!--<TextBlock
+                                                Grid.Column="0"
+                                                Grid.Row="1"
+                                                FontSize="16"
+                                                HorizontalAlignment="Left"
+                                                Text="{Binding Description}"
+                                                TextWrapping="Wrap"/>-->
+                                </Grid>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+
+                </ItemsControl>
+
+            </Grid>
+
         </Grid>
-        
-        <UserControl Grid.Column="1">
-            <UserControl.Template>
-                <ControlTemplate>
-                    <ControlTemplate.Triggers>
-                        <DataTrigger Binding="{Binding ResultsVisible}" Value="True">
-                            <DataTrigger.EnterActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation
-                                            Storyboard.TargetName="ResultsPanel"
-                                            Storyboard.TargetProperty="(Grid.Width)"
-                                            From="0" To="275" Duration="0:0:.15" AutoReverse="False"/>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </DataTrigger.EnterActions>
-                            <DataTrigger.ExitActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation
-                                            Storyboard.TargetName="ResultsPanel"
-                                            Storyboard.TargetProperty="(Grid.Width)"
-                                            From="275" To="0" Duration="0:0:.15" AutoReverse="False"/>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </DataTrigger.ExitActions>
-                        </DataTrigger>
-                    </ControlTemplate.Triggers>
-                    <Grid Name="ResultsPanel" Width="0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                    </Grid>
-                </ControlTemplate>
-            </UserControl.Template>
-        </UserControl>
         
     </Grid>
 </UserControl>

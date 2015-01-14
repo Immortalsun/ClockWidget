@@ -177,7 +177,7 @@ namespace TimeZoneHelper
             var addWindow = new AddDialog();
             addWindow.Owner = this;
             var result = addWindow.ShowDialog();
-            if ((bool)result)
+            if ((bool) result)
             {
                 var cityName = addWindow.Name;
                 var timeZoneString = addWindow.TimeZoneString;
